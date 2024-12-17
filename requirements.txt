@@ -1,0 +1,8 @@
+django==4.2
+djangorestframework==3.14
+django-environ==0.11.2
+celery
+gunicorn==23.0.0
+mssql-django==1.5
+pyodbc==5.2.0
+redis>=5.0.0

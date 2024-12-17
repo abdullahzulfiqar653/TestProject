@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  server:
+    build: .
+    volumes:
+    - .:/opt/project
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    container_name: ${PROJECT_NAME}
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+
+  redis:
+    image: redis:latest
+    container_name: selteq_redis
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    container_name: selteq_celery
+    command: celery -A selteq_task worker --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: .
+    container_name: selteq_celery_beat
+    command: celery -A selteq_task beat --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - redis
