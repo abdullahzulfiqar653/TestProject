@@ -21,13 +21,10 @@ class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         task_id = self.kwargs.get("pk")
+        user_id = self.request.user.id
         query = "SELECT * FROM apis_task WHERE user_id = %s AND id = %s"
-        with connection.cursor() as cursor:
-            cursor.execute(query, [self.request.user.id, task_id])
-            result = cursor.fetchone()
-        if result:
-            return Task.objects.get(id=result[0])
-        return None
+        task = Task.objects.raw(query, [user_id, task_id])
+        return next(iter(task), None)
 
     def get_queryset(self):
         return self.request.user.tasks.all()
