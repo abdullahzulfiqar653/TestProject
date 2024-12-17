@@ -1,6 +1,7 @@
 import os
 import environ
 from pathlib import Path
+from datetime import timedelta
 
 
 env = environ.Env(
@@ -25,8 +26,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
+    "drf_yasg",
+    # user defined apps
+    "apis",
 ]
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -61,9 +65,53 @@ WSGI_APPLICATION = "selteq_task.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR
-        / "db.sqlite3",  # BASE_DIR is the root directory of your project
+        "NAME": BASE_DIR / "db.sqlite3",
     }
+}
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "mssql",
+#         "NAME": env("DATABASE_NAME"),
+#         "USER": env("DATABASE_USER"),
+#         "PASSWORD": env("DATABASE_PASSWORD"),
+#         "HOST": env("DATABASE_HOST", default="selteq_mssql"),
+#         "PORT": env("DATABASE_PORT", default="1433"),
+#         # "OPTIONS": {
+#         #     "driver": "ODBC Driver 17 for SQL Server",
+#         #     # "extra_params": "TrustServerCertificate=yes;MultipleActiveResultSets=True",
+#         #     # "use_legacy_datetime": False,
+#         # },
+#     }
+# }
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated"),
+}
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Enter your token in the format: (Bearer <apiKey>) Example: Bearer eycdefghijklmnopqrstuvwxyz...",
+        },
+    },
+    "USE_SESSION_AUTH": False,
+    "DEFAULT_AUTO_SCHEMA_CLASS": "drf_yasg.inspectors.SwaggerAutoSchema",
 }
 
 AUTH_PASSWORD_VALIDATORS = [
