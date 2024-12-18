@@ -32,7 +32,7 @@ class TaskSerializer(serializers.ModelSerializer):
                 {"duration": "duration cannot be updated."}
             )
 
-        query = "UPDATE apis_task SET title = %s, updated_at = CURRENT_TIMESTAMP WHERE id = %s AND user_id = %s"
+        query = "UPDATE apis_task SET title = %s, updated_at = GETDATE() WHERE id = %s AND user_id = %s"
         with connection.cursor() as cursor:
             cursor.execute(query, [title, instance.id, instance.user.id])
         instance.refresh_from_db()

@@ -74,26 +74,19 @@ WSGI_APPLICATION = "selteq_task.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "mssql",
+        "NAME": env("DATABASE_NAME"),
+        "USER": env("DATABASE_USER"),
+        "PASSWORD": env("DATABASE_PASSWORD"),
+        "HOST": env("DATABASE_HOST", default="selteq_mssql"),
+        "PORT": env("DATABASE_PORT", default="1433"),
+        # "OPTIONS": {
+        #     "driver": "ODBC Driver 17 for SQL Server",
+        #     # "extra_params": "TrustServerCertificate=yes;MultipleActiveResultSets=True",
+        #     # "use_legacy_datetime": False,
+        # },
     }
 }
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "mssql",
-#         "NAME": env("DATABASE_NAME"),
-#         "USER": env("DATABASE_USER"),
-#         "PASSWORD": env("DATABASE_PASSWORD"),
-#         "HOST": env("DATABASE_HOST", default="selteq_mssql"),
-#         "PORT": env("DATABASE_PORT", default="1433"),
-#         # "OPTIONS": {
-#         #     "driver": "ODBC Driver 17 for SQL Server",
-#         #     # "extra_params": "TrustServerCertificate=yes;MultipleActiveResultSets=True",
-#         #     # "use_legacy_datetime": False,
-#         # },
-#     }
-# }
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
