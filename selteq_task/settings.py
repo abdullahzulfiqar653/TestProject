@@ -2,6 +2,7 @@ import os
 import environ
 from pathlib import Path
 from datetime import timedelta
+from celery.schedules import crontab
 
 
 env = environ.Env(
@@ -15,8 +16,16 @@ DEBUG = env("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
+CELERY_TASK_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
+CELERY_BEAT_SCHEDULE = {
+    "print_user_tasks_every_minute": {
+        "task": "apis.tasks.print_user_tasks",
+        "schedule": crontab(minute="*/1"),  # Runs every minute
+    },
+}
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -28,6 +37,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "drf_yasg",
+    "django_celery_beat",
     # user defined apps
     "apis",
 ]
@@ -96,9 +106,6 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": True,
-    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 SWAGGER_SETTINGS = {
