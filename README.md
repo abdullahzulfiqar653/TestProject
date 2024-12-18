@@ -1,66 +1,107 @@
+Here's the updated **README.md** file with database setup instructions and Makefile integration:
+
+---
+
+### **README.md**
+
 # Project Setup Instructions
 
-## Prerequisites
+### **⚠️ Important Note: Database Configuration**
 
-Before starting, ensure you have the following installed on your system:
+> ⚠️ **WARNING**:  
+> The database is **NOT included in the Docker setup**.  
+> You must configure the database credentials correctly in the `.env` file.  
+> Double-check the following variables in the `.env` file to ensure they match your database setup:
+>
+> - `DB_HOST`
+> - `DB_PORT`
+> - `DB_NAME`
+> - `DB_USER`
+> - `DB_PASSWORD`  
+>   Ensure your database is running independently and accessible by the application.
 
-- **Docker**
-- **Docker Compose**
-- **Make** (Linux/macOS users) or a compatible tool (Windows users)
+---
 
-## Steps to Run the Project
+### **Prerequisites**
 
-### 1. Setup the `.env` File
+1. **Required Tools**:
+   - **Docker**: [Install Docker](https://docs.docker.com/get-docker/)
+   - **Docker Compose**: Pre-installed with Docker Desktop.
+   - **Make**:
+     - On **macOS/Linux**, it’s often pre-installed. Otherwise, install it using your package manager (`apt`, `yum`, or `brew`).
+     - On **Windows**, install **Make** via [Chocolatey](https://chocolatey.org/):
+       ```bash
+       choco install make
+       ```
+     - Alternatively, use the equivalent raw commands provided below if `make` is unavailable.
 
-1. Locate the `.env.example` file in the project directory.
-2. Create a new `.env` file:
-   - On macOS/Linux:
+---
+
+### **Setup Instructions**
+
+1. **Clone the Repository**:
+   Clone the repository to your local machine:
+
+   ```bash
+   git clone <repository-url>
+   cd <project-directory>
+   ```
+
+2. **Create the `.env` File**:
+
+   - Copy the contents of `.env.example` to a new file named `.env`:
      ```bash
      cp .env.example .env
      ```
-   - On Windows:
-     ```cmd
-     copy .env.example .env
-     ```
-3. Open the `.env` file and configure all required environment variables as needed.
+   - Open `.env` and update the required environment variables:
+     - **Database Variables**: Ensure `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` match your database setup.
 
-### 2. Start the Services
+3. **Run the Project**:
 
-Depending on your operating system, follow the instructions below:
+   - **Using `make` (Recommended)**:
+     - To build and start the project:
+       ```bash
+       make services
+       ```
+   - **Without `make`**:
+     - Manually create the `.env` file (if not already done):
+       ```bash
+       test -f .env || cp .env.example .env
+       ```
+     - Then build and start the services:
+       ```bash
+       docker-compose -f docker-compose.local.yml up --build
+       ```
 
-#### For macOS/Linux Users
+4. **Access the Application**:
+   - Once the containers are running, check the terminal logs for accessible URLs and ports.
 
-1. Open your terminal.
-2. Run the following command to start the project using the `Makefile`:
-   ```bash
-   make services
-   ```
+---
 
-#### For Windows Users
+### **Available Make Commands**
 
-Windows does not natively support `make`. You can:
+| Command          | Description                                                               |
+| ---------------- | ------------------------------------------------------------------------- |
+| `make services`  | Build and run the project with Docker Compose.                            |
+| `make setup-env` | Create the `.env` file if it doesn't exist and prompt for variable setup. |
+| `make check-db`  | Validate that database credentials are properly configured in the `.env`. |
+| `make help`      | Show available make commands.                                             |
 
-1. Install `make` using [Chocolatey](https://chocolatey.org/) or another package manager:
-   ```cmd
-   choco install make
-   ```
-2. Alternatively, run the `docker-compose` command directly from the `Makefile`:
-   ```cmd
-   test -f .env || type nul > .env
-   docker-compose -f docker-compose.local.yml up --build
-   ```
+---
 
-### 3. Access the Project
+### **Common Issues**
 
-Once the services are running, you can access the application as defined in your `docker-compose.local.yml` file (e.g., at `http://localhost:8000`).
+1. **Database Connection Errors**:
 
-## Notes
+   - Ensure the database service is running independently and reachable from the application.
 
-- Ensure your `.env` file is correctly set up before starting the services.
-- If you encounter any issues, verify that Docker and Docker Compose are correctly installed and configured.
-- To stop the services, press `Ctrl+C` or run the following command:
-  ```bash
-  docker-compose -f docker-compose.local.yml down
-  ```
+2. **Environment File Issues**:
 
-Feel free to reach out if you have questions or encounter any issues during setup.
+   - If `.env` is missing, Docker might fail to start. Follow the `.env` setup instructions above.
+
+3. **Windows-Specific Issues**:
+   - If `make` is unavailable, use the raw `docker-compose` commands provided.
+
+---
+
+Let me know if you need further assistance!
