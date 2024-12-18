@@ -8,6 +8,13 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ["id", "title", "duration", "created_at", "updated_at"]
+        extra_kwargs = {"duration": {"required": False}}
+
+    def validate_duration(self, duration):
+        request = self.context.get("request")
+        if request.method == "POST" and not duration:
+            raise serializers.ValidationError({"duration": "duration is required."})
+        return duration
 
     def create(self, validated_data):
         user = self.context["request"].user
@@ -16,8 +23,14 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         title = validated_data.get("title")
+        duration = validated_data.get("duration")
+
         if not title:
             raise serializers.ValidationError("Only the 'title' field can be updated.")
+        if duration:
+            raise serializers.ValidationError(
+                {"duration": "duration cannot be updated."}
+            )
 
         query = "UPDATE apis_task SET title = %s, updated_at = CURRENT_TIMESTAMP WHERE id = %s AND user_id = %s"
         with connection.cursor() as cursor:

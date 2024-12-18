@@ -1,6 +1,6 @@
-from django.db import connection
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied, NotFound
 
 from apis.models import Task
 from apis.serializers import TaskSerializer
@@ -24,7 +24,15 @@ class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         user_id = self.request.user.id
         query = "SELECT * FROM apis_task WHERE user_id = %s AND id = %s"
         task = Task.objects.raw(query, [user_id, task_id])
+
+        if not task:
+            raise NotFound("Task not found.")
         return next(iter(task), None)
 
     def get_queryset(self):
         return self.request.user.tasks.all()
+
+    def perform_destroy(self, instance):
+        if instance is None or instance.user != self.request.user:
+            raise PermissionDenied("You do not have permission to delete this task.")
+        instance.delete()
