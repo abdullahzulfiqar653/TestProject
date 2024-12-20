@@ -1,4 +1,4 @@
-Here's the updated **README.md** file with database setup instructions and Makefile integration:
+Here's the updated **README.md** file with added instructions for setting up MSSQL, integrating Docker, and accessing the endpoints via Swagger after successful Docker deployment:
 
 ---
 
@@ -19,6 +19,8 @@ Here's the updated **README.md** file with database setup instructions and Makef
 > - `DB_USER`
 > - `DB_PASSWORD`  
 >   Ensure your database is running independently and accessible by the application.
+>
+> **Note**: We are currently using **SQLite3** for development. To set up **MSSQL**, update your database settings in the `settings.py` accordingly.
 
 ---
 
@@ -54,7 +56,7 @@ Here's the updated **README.md** file with database setup instructions and Makef
      cp .env.example .env
      ```
    - Open `.env` and update the required environment variables:
-     - **Database Variables**: Ensure `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` match your database setup.
+     - **Database Variables**: Ensure `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` match your database setup, whether you're using SQLite or configuring MSSQL.
 
 3. **Run the Project**:
 
@@ -74,7 +76,7 @@ Here's the updated **README.md** file with database setup instructions and Makef
        ```
 
 4. **Access the Application**:
-   - Once the containers are running, check the terminal logs for accessible URLs and ports.
+   - Once the containers are running, the application's endpoints are accessible at `http://localhost:8000/swagger` for API documentation and testing.
 
 ---
 
@@ -93,7 +95,7 @@ Here's the updated **README.md** file with database setup instructions and Makef
 
 1. **Database Connection Errors**:
 
-   - Ensure the database service is running independently and reachable from the application.
+   - Ensure the database service is running independently and reachable from the application. This includes setting up MSSQL correctly if not using SQLite.
 
 2. **Environment File Issues**:
 
@@ -103,5 +105,3 @@ Here's the updated **README.md** file with database setup instructions and Makef
    - If `make` is unavailable, use the raw `docker-compose` commands provided.
 
 ---
-
-Let me know if you need further assistance!
