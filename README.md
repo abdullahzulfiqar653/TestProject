@@ -1,16 +1,12 @@
-Here's the updated **README.md** file with added instructions for setting up MSSQL, integrating Docker, and accessing the endpoints via Swagger after successful Docker deployment:
-
----
-
 ### **README.md**
 
 # Project Setup Instructions
 
 ### **⚠️ Important Note: Database Configuration**
 
-> ⚠️ **WARNING**:  
+> **Note**: We are currently using **SQLite3** for development. To set up **MSSQL**, update your database settings in the `settings.py` accordingly.
 > The database is **NOT included in the Docker setup**.  
-> You must configure the database credentials correctly in the `.env` file.  
+> You can configure the database credentials in the `.env` file.  
 > Double-check the following variables in the `.env` file to ensure they match your database setup:
 >
 > - `DB_HOST`
@@ -19,8 +15,6 @@ Here's the updated **README.md** file with added instructions for setting up MSS
 > - `DB_USER`
 > - `DB_PASSWORD`  
 >   Ensure your database is running independently and accessible by the application.
->
-> **Note**: We are currently using **SQLite3** for development. To set up **MSSQL**, update your database settings in the `settings.py` accordingly.
 
 ---
 
