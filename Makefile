@@ -10,7 +10,7 @@ help:
 	@echo "  make help          - Show this help message"
 
 # Start the application services using Docker Compose
-services: setup-env check-db
+services:
 	docker-compose -f docker-compose.local.yml up --build
 
 # Ensure .env exists and prompt the user to configure it
